@@ -40,6 +40,8 @@ make
 make NAI68PPC2_defconfig
 make
 
+#clean build
+make distclean
 
 Load uboot debug symobl
 loadsym /home/dev1/nxp/u-boot-fsl-sdk-v2.0-1703/u-boot
