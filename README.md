@@ -32,10 +32,15 @@ Source /nxp/fsl-qoriq/2.0
 export ARCH=powerpc
 export CROSS_COMPILE=powerpc-fsl-linux-
  
- 
+#build T2028RDB target board 
 make T2080RDB_defconfig
 make
  
+#build 68PPC2 target board
+make NAI68PPC2_defconfig
+make
+
+
 Load uboot debug symobl
 loadsym /home/dev1/nxp/u-boot-fsl-sdk-v2.0-1703/u-boot
 setpicloadaddr 0xfff40000
