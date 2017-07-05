@@ -137,6 +137,11 @@ config TARGET_T208XRDB
 	select SUPPORT_SPL
 	select PHYS_64BIT
 
+config TARGET_NAI68PPC2
+	bool "Support 68PPC2"
+	select SUPPORT_SPL
+	select PHYS_64BIT
+
 config TARGET_T4240QDS
 	bool "Support T4240QDS"
 	select SUPPORT_SPL
@@ -194,6 +199,7 @@ source "board/freescale/p1_p2_rdb_pc/Kconfig"
 source "board/freescale/p1_twr/Kconfig"
 source "board/freescale/p2041rdb/Kconfig"
 source "board/freescale/qemu-ppce500/Kconfig"
+source "board/freescale/nai68ppc2/Kconfig"
 source "board/freescale/t102xqds/Kconfig"
 source "board/freescale/t102xrdb/Kconfig"
 source "board/freescale/t1040qds/Kconfig"
