@@ -1,0 +1,6 @@
+NAI68PPC2 BOARD
+M:	NAI <nai@naii.com>
+S:	Maintained
+F:	board/freescale/nai68ppc2/
+F:	include/configs/NAI68PPC2.h
+F:	configs/NAI68PPC2_defconfig
