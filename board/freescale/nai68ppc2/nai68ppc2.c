@@ -23,10 +23,10 @@ DECLARE_GLOBAL_DATA_PTR;
 
 int checkboard(void)
 {
-	//struct cpu_type *cpu = gd->arch.cpu;
 	static const char *freq[3] = {"100.00MHZ", "125.00MHz", "156.25MHZ"};
 
-	printf("Board: NAI68PPC2, ");
+	printf("Board: 68PPC2, Version:%02d.%02d.%02d\n", CONFIG_68PPC2_MAJOR,CONFIG_68PPC2_MINOR,CONFIG_68PPC2_BUILD);
+	
 	printf("CPLD ver: 0x%02x\n", cpld_read(CPLD_FW_REV));
 
 	puts("SERDES Reference Clocks:\n");
@@ -82,18 +82,7 @@ void board_poweroff (void)
 
 int misc_init_r(void)
 {
-	/* Kick the boot watchdog */
-	cpld_write(CPLD_BOOT_WDT, 0xFF);
-
 	/* TODO reset PHYs (and anyhing else.....) */
-#if 0
-	u8 reg;
-
-	/* Reset CS4315 PHY */
-	reg = CPLD_READ(reset_ctl);
-	reg |= CPLD_RSTCON_EDC_RST;
-	CPLD_WRITE(reset_ctl, reg);
-#endif
 	return 0;
 }
 

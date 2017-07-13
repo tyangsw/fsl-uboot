@@ -111,6 +111,9 @@ int cpld_cmd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 #endif
 	} else if (strcmp(argv[1], "poweroff") == 0) {
 		board_poweroff();
+	} else if (strcmp(argv[1], "altbank") == 0) {
+		ulong val = simple_strtoul(argv[2], NULL, 16);
+		cpld_write(CPLD_BANK_SEL, val);
 	} else
 		rc = cmd_usage(cmdtp);
 
@@ -125,6 +128,7 @@ U_BOOT_CMD(
 	"cpld ttlwr <val>  - write the TTL IO lines, val is in hex\n"
 	"cpld ttllpbk      - read the value written to the TTL IO lines\n"
 	"cpld fwrev        - read the CPLD firmware revision\n"
+	"cpld atlbank <value>  - change nor flash bank, val in is hex\n"
 #ifdef CONFIG_HW_WATCHDOG
 	"cpld dog          - enable HW watchdog, cannot be disabled!\n"
 	"cpld die          - stop kicking HW watchdog, board will reset!\n"
