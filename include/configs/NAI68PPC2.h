@@ -15,7 +15,7 @@
 #define CONFIG_NAI68PPC2
 #define CONFIG_68PPC2_MAJOR 0
 #define CONFIG_68PPC2_MINOR 1
-#define CONFIG_68PPC2_BUILD 0
+#define CONFIG_68PPC2_BUILD 1
 #define CONFIG_USB_EHCI
 #define CONFIG_FSL_SATA_V2
 
@@ -43,11 +43,11 @@
 #undef CONFIG_SRIO_PCIE_BOOT_SLAVE
 
 #ifndef CONFIG_SYS_TEXT_BASE
-#define CONFIG_SYS_TEXT_BASE	0xebf40000
+#define CONFIG_SYS_TEXT_BASE	0xeff40000
 #endif
 
 #ifndef CONFIG_RESET_VECTOR_ADDRESS
-#define CONFIG_RESET_VECTOR_ADDRESS	0xebfffffc
+#define CONFIG_RESET_VECTOR_ADDRESS	0xeffffffc
 #endif
 
 /*
@@ -119,7 +119,7 @@ unsigned long get_board_ddr_clk(void);
 #define CONFIG_SYS_FSL_DDR3
 #undef CONFIG_FSL_DDR_INTERACTIVE
 #undef CONFIG_SYS_DDR_RAW_TIMING
-#define CONFIG_SYS_SDRAM_SIZE	2048	/* for fixed parameter use */
+#define CONFIG_SYS_SDRAM_SIZE	8192	/* for fixed parameter use */
 #define CTRL_INTLV_PREFERED	cacheline
 
 /*
@@ -132,7 +132,7 @@ unsigned long get_board_ddr_clk(void);
 				CSPR_PORT_SIZE_16 | \
 				CSPR_MSEL_NOR | \
 				CSPR_V)
-#define CONFIG_SYS_NOR_AMASK	IFC_AMASK(64*1024*1024)
+#define CONFIG_SYS_NOR_AMASK	IFC_AMASK(128*1024*1024)
 
 /* NOR Flash Timing Params */
 #define CONFIG_SYS_NOR_CSOR	CSOR_NAND_TRHZ_80
@@ -154,7 +154,7 @@ unsigned long get_board_ddr_clk(void);
 
 #define CONFIG_SYS_MAX_FLASH_BANKS		1				/* number of banks */
 #define CONFIG_SYS_FLASH_CFI_WIDTH		FLASH_CFI_16BIT
-#define CONFIG_SYS_FLASH_BANKS_SIZES	{64*1024*1024}
+#define CONFIG_SYS_FLASH_BANKS_SIZES	{128*1024*1024}
 #define CONFIG_SYS_MAX_FLASH_SECT		1024	/* sectors per device */
 #define CONFIG_SYS_FLASH_ERASE_TOUT		60000	/* Flash Erase Timeout (ms) */
 #define CONFIG_SYS_FLASH_WRITE_TOUT		500	/* Flash Write Timeout (ms) */
@@ -354,7 +354,7 @@ unsigned long get_board_ddr_clk(void);
 
 /* Default address of microcode for the Linux Fman driver */
 #define CONFIG_SYS_QE_FMAN_FW_IN_NOR
-#define CONFIG_SYS_FMAN_FW_ADDR			0xEBF00000
+#define CONFIG_SYS_FMAN_FW_ADDR			0xEFF00000
 #define CONFIG_SYS_QE_FMAN_FW_LENGTH	0x10000
 #define CONFIG_SYS_FDT_PAD				(0x3000 + CONFIG_SYS_QE_FMAN_FW_LENGTH)
 #endif /* CONFIG_NOBQFMAN */

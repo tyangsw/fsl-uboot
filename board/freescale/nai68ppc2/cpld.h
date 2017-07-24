@@ -19,17 +19,17 @@
 #ifndef __CPLD_H_
 #define __CPLD_H_
 
-#define CPLD_BANK_SEL			0x00000000
-#define CPLD_SATA_MUX_SEL		0x00000002
-#define CPLD_SPARE				0x00000004
-#define CPLD_FW_REV				0x00000006
-#define CPLD_TTL_RW				0x00000008
-#define CPLD_TTL_LPBK			0x0000000A
-#define CPLD_RD_TTL_DATA		0x0000000C
-#define CPLD_WR_TTL_DATA		0x0000000E
-#define CPLD_SPARE2				0x00000010
-#define CPLD_SPARE3				0x00000012
-#define CPLD_WR_TTL_INT_EN		0x00000014
+#define CPLD_SPARE					0x00000000
+#define CPLD_SATA_MUX_SEL			0x00000002
+#define CPLD_BANK_SEL				0x00000004
+#define CPLD_FW_REV					0x00000006
+#define CPLD_TTL_RW					0x00000008
+#define CPLD_TTL_LPBK				0x0000000A
+#define CPLD_RD_TTL_DATA			0x0000000C
+#define CPLD_WR_TTL_DATA			0x0000000E
+#define CPLD_SPARE2					0x00000010
+#define CPLD_SPARE3					0x00000012
+#define CPLD_WR_TTL_INT_EN			0x00000014
 #define CPLD_WR_TTL_INT_DIR			0x00000016
 #define CPLD_INT_STAT				0x00000018
 #define CPLD_WR_TEMP_ALM_OVRD		0x0000001A
@@ -39,8 +39,6 @@
 
 #define CPLD_FLASH_BANK_0		0x00
 #define CPLD_FLASH_BANK_1		0x01
-#define CPLD_FLASH_BANK_2		0x02
-#define CPLD_FLASH_BANK_3		0x03
 
 u16 cpld_read(unsigned int reg);
 void cpld_write(unsigned int reg, u16 value);

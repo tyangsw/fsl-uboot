@@ -97,11 +97,9 @@ int cpld_cmd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 		}
 	} else if (strcmp(argv[1], "fwrev") == 0) {
 		u16 val = cpld_read(CPLD_FW_REV);
-
 		printf("FW revision = 0x%04X\n", val);
 	} else if (strcmp(argv[1], "ttllpbk") == 0){
 		u16 val = cpld_read(CPLD_TTL_LPBK);
-
 		printf("TTL loopback = 0x%02X\n", (u8)val);
 #ifdef CONFIG_HW_WATCHDOG
 	} else if (strcmp(argv[1], "dog") == 0) {
@@ -112,8 +110,20 @@ int cpld_cmd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 	} else if (strcmp(argv[1], "poweroff") == 0) {
 		board_poweroff();
 	} else if (strcmp(argv[1], "altbank") == 0) {
-		ulong val = simple_strtoul(argv[2], NULL, 16);
-		cpld_write(CPLD_BANK_SEL, val);
+		u16 val = simple_strtoul(argv[2], NULL, 16);
+		switch (val) {
+			case CPLD_FLASH_BANK_0:
+			case CPLD_FLASH_BANK_1:
+				printf("Set flash bank to 0x%02X\n", val);
+				cpld_write(CPLD_BANK_SEL, val);
+				break;
+			default:
+				printf("Invalid flash bank 0x%02X\n", val);
+				break;
+		}
+	} else if (strcmp(argv[1], "getbank") == 0) {
+		u16 val = cpld_read(CPLD_BANK_SEL);
+		printf("Flash bank 0x%02X\n", val);
 	} else
 		rc = cmd_usage(cmdtp);
 
@@ -128,7 +138,8 @@ U_BOOT_CMD(
 	"cpld ttlwr <val>  - write the TTL IO lines, val is in hex\n"
 	"cpld ttllpbk      - read the value written to the TTL IO lines\n"
 	"cpld fwrev        - read the CPLD firmware revision\n"
-	"cpld atlbank <value>  - change nor flash bank, val in is hex\n"
+	"cpld atlbank <val>  - change flash bank, val in is hex\n"
+	"cpld getbank      - read flash bank select\n"
 #ifdef CONFIG_HW_WATCHDOG
 	"cpld dog          - enable HW watchdog, cannot be disabled!\n"
 	"cpld die          - stop kicking HW watchdog, board will reset!\n"

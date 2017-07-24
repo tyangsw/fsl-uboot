@@ -26,9 +26,9 @@ int checkboard(void)
 	static const char *freq[3] = {"100.00MHZ", "125.00MHz", "156.25MHZ"};
 
 	printf("Board: 68PPC2, Version:%02d.%02d.%02d\n", CONFIG_68PPC2_MAJOR,CONFIG_68PPC2_MINOR,CONFIG_68PPC2_BUILD);
-	
+	printf("FLASH Bank: 0x%02x\n", cpld_read(CPLD_BANK_SEL));
 	printf("CPLD ver: 0x%02x\n", cpld_read(CPLD_FW_REV));
-
+	
 	puts("SERDES Reference Clocks:\n");
 	printf("SD1_CLK1=%s, SD1_CLK2=%s\n", freq[0], freq[0]);
 	printf("SD2_CLK1=%s, SD2_CLK2=%s\n", freq[0], freq[0]);
