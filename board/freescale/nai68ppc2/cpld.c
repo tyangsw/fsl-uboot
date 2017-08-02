@@ -51,7 +51,7 @@ void cpld_set_bit_fail(void) {
 	u16 val = 0x40;
 
 	cpld_write(CPLD_TTL_RW, val);
-	cpld_write(CPLD_WR_TTL_DATA, val);
+	cpld_write(CPLD_TTL_DATA, val);
 }
 
 #ifdef CONFIG_HW_WATCHDOG
@@ -83,14 +83,13 @@ int cpld_cmd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 			printf("Invalid value\n");
 		}
 	} else if (strcmp(argv[1], "ttlrd") == 0) {
-		u16 val = cpld_read(CPLD_RD_TTL_DATA);
+		u16 val = cpld_read(CPLD_TTL_DATA);
 
 		printf("TTL read = 0x%02X\n", (u8)val);
 	} else if (strcmp(argv[1], "ttlwr") == 0) {
 		ulong val = simple_strtoul(argv[2], NULL, 16);
-
 		if ((val & 0xFFFFFF00) == 0) {
-			cpld_write(CPLD_WR_TTL_DATA, (u16)val);
+			cpld_write(CPLD_TTL_DATA, (u16)val);
 		}
 		else {
 			printf("Invalid value\n");
@@ -109,6 +108,36 @@ int cpld_cmd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 #endif
 	} else if (strcmp(argv[1], "poweroff") == 0) {
 		board_poweroff();
+	} else if (strcmp(argv[1], "procreset") == 0) {
+		u16 val = simple_strtoul(argv[2], NULL, 16);
+		switch (val) {
+			case 1:
+				printf("Enable proc reset\n");
+				cpld_write(CPLD_PROC_STATUS, val);
+				break;
+			case 0:
+				printf("Disable proc reset\n");
+				cpld_write(CPLD_PROC_STATUS, val);
+				break;
+			default:
+				rc = cmd_usage(cmdtp);
+				break;
+		}
+	} else if (strcmp(argv[1], "tempalarm") == 0) {
+		u16 val = simple_strtoul(argv[2], NULL, 16);
+		switch (val) {
+			case 0:
+				printf("Enable temp alarm\n");
+				cpld_write(CPLD_WR_TEMP_ALM_OVRD, val);
+				break;
+			case 1:
+				printf("Disable temp alarm\n");
+				cpld_write(CPLD_WR_TEMP_ALM_OVRD, val);
+				break;
+			default:
+				rc = cmd_usage(cmdtp);
+				break;
+		}
 	} else if (strcmp(argv[1], "altbank") == 0) {
 		u16 val = simple_strtoul(argv[2], NULL, 16);
 		switch (val) {
@@ -118,6 +147,7 @@ int cpld_cmd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 				cpld_write(CPLD_BANK_SEL, val);
 				break;
 			default:
+				rc = cmd_usage(cmdtp);
 				printf("Invalid flash bank 0x%02X\n", val);
 				break;
 		}
@@ -133,18 +163,20 @@ int cpld_cmd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 U_BOOT_CMD(
 	cpld, CONFIG_SYS_MAXARGS, 1, cpld_cmd,
 	"Set the direction and read/write the TTL IO lines",
-	"ttldir <dir> - set the direction, dir is in hex\n"
-	"cpld ttlrd        - read the TTL IO lines\n"
-	"cpld ttlwr <val>  - write the TTL IO lines, val is in hex\n"
-	"cpld ttllpbk      - read the value written to the TTL IO lines\n"
-	"cpld fwrev        - read the CPLD firmware revision\n"
-	"cpld atlbank <val>  - change flash bank, val in is hex\n"
-	"cpld getbank      - read flash bank select\n"
+	"ttldir <dir>         - set the direction,dir is in hex\n"
+	"cpld ttlrd           - read the TTL IO lines\n"
+	"cpld ttlwr <val>     - write the TTL IO lines,val is in hex\n"
+	"cpld ttllpbk         - read the value written to the TTL IO lines\n"
+	"cpld fwrev           - read the CPLD firmware revision\n"
+	"cpld procreset <val>  - enable/disable proc reset,val [enable 0x1:disable 0x0]\n"
+	"cpld tempalarm <val> - enable/disable temp alarm shutdown,val [enable 0x0:disable 0x1]\n"
+	"cpld atlbank <val>   - change flash bank, val in is hex [0:1]\n"
+	"cpld getbank         - read flash bank select\n"
 #ifdef CONFIG_HW_WATCHDOG
-	"cpld dog          - enable HW watchdog, cannot be disabled!\n"
-	"cpld die          - stop kicking HW watchdog, board will reset!\n"
+	"cpld dog             - enable HW watchdog, cannot be disabled!\n"
+	"cpld die             - stop kicking HW watchdog, board will reset!\n"
 #endif
-	"cpld poweroff     - power off the board\n"
+	"cpld poweroff        - power off the board\n"
 	);
 
 

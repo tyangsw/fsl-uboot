@@ -15,7 +15,7 @@
 #define CONFIG_NAI68PPC2
 #define CONFIG_68PPC2_MAJOR 0
 #define CONFIG_68PPC2_MINOR 1
-#define CONFIG_68PPC2_BUILD 1
+#define CONFIG_68PPC2_BUILD 2
 #define CONFIG_USB_EHCI
 #define CONFIG_FSL_SATA_V2
 
@@ -75,7 +75,7 @@
 
 #define CONFIG_ENV_IS_IN_FLASH
 #define CONFIG_ENV_ADDR		(CONFIG_SYS_MONITOR_BASE - CONFIG_ENV_SECT_SIZE)
-#define CONFIG_ENV_SIZE		0x2000
+#define CONFIG_ENV_SIZE		0x2000 /*8KB*/
 #define CONFIG_ENV_SECT_SIZE	0x20000 /* 128K (one sector) */
 
 #ifndef __ASSEMBLY__
@@ -160,6 +160,25 @@ unsigned long get_board_ddr_clk(void);
 #define CONFIG_SYS_FLASH_WRITE_TOUT		500	/* Flash Write Timeout (ms) */
 #define CONFIG_SYS_FLASH_EMPTY_INFO
 #define CONFIG_SYS_FLASH_BANKS_LIST	{CONFIG_SYS_FLASH_BASE_PHYS}
+
+
+/*NOR Flash Image layout*/
+#define RCW_IMAGE_OFFSET				CONFIG_SYS_FLASH_BASE
+#define RCW_IMAGE_SIZE					0x20000		/*128KB*/
+#define FMAN_UCODE_IMAGE_OFFSET			0xE8020000
+#define FMAN_UCODE_IMAGE_SIZE			0x20000		/*128KB*/
+#define DTB_IMAGE_OFFSET				0xE8040000
+#define DTB_IMAGE_SIZE					0x100000	/*1MB*/
+#define KERNEL_IMAGE_OFFSET				0xE8140000
+#define KERNEL_IMAGE_SIZE				0x800000	/*8MB*/
+#define ROOTFS_IMAGE_OFFSET				0xE8940000
+#define ROOTFS_IMAGE_SIZE				0x36C0000	/*54MB + 768KB*/
+#define FREE_SPACE_OFFSET				0xEC000000
+#define FREE_SPACE_SIZE					0x3F020000	/*63MB + 128KB*/
+#define UBOOT_IMAGE_ENV_OFFSET			0xEFF20000
+#define UBOOT_IMAGE_ENV_SIZE			0x20000
+#define UBOOT_IMAGE_OFFSET				CONFIG_SYS_TEXT_BASE
+#define UBOOT_IMAGE_SIZE				0xC0000		/*768KB*/
 
 
 /* IFC CPLD/Zyqn FPGA Definitions */
@@ -354,7 +373,7 @@ unsigned long get_board_ddr_clk(void);
 
 /* Default address of microcode for the Linux Fman driver */
 #define CONFIG_SYS_QE_FMAN_FW_IN_NOR
-#define CONFIG_SYS_FMAN_FW_ADDR			0xEFF00000
+#define CONFIG_SYS_FMAN_FW_ADDR			FMAN_UCODE_IMAGE_OFFSET
 #define CONFIG_SYS_QE_FMAN_FW_LENGTH	0x10000
 #define CONFIG_SYS_FDT_PAD				(0x3000 + CONFIG_SYS_QE_FMAN_FW_LENGTH)
 #endif /* CONFIG_NOBQFMAN */
@@ -362,8 +381,8 @@ unsigned long get_board_ddr_clk(void);
 #ifdef CONFIG_SYS_DPAA_FMAN
 #define CONFIG_FMAN_ENET
 #define CONFIG_PHY_MARVELL
-#define RGMII_PHY1_ADDR		0x00  /* Marvell 88E1512 */
-#define RGMII_PHY2_ADDR		0x01
+#define RGMII_PHY1_ADDR		0x00	/* Marvell 88E1512 */
+#define RGMII_PHY2_ADDR		0x01	/* Marvell 88E1512 */
 #endif
 
 #ifdef CONFIG_FMAN_ENET
@@ -413,15 +432,6 @@ unsigned long get_board_ddr_clk(void);
 #define MTDPARTS_DEFAULT "mtdparts=fe8000000.nor:1m(uboot),5m(kernel)," \
 			"128k(dtb),44m(fs),-(user);"
 #endif
-
-/*NOR Flash Image layout*/
-#define RCW_IMAGE_OFFSET			(CONFIG_SYS_FLASH_BASE + 0)
-#define LINUX_UIMAGE_IMAGE_OFFSET	(CONFIG_SYS_FLASH_BASE + 0x20000)
-#define DTB_IMAGE_OFFSET			(CONFIG_SYS_FLASH_BASE + 0x800000)
-#define ROOTFS_IMAGE_OFFSET			(CONFIG_SYS_FLASH_BASE + 0x1300000)
-#define FREE_IMAGE_OFFSET			(CONFIG_SYS_FLASH_BASE + 0x3E00000)
-#define FMAN_IMAGE_OFFSET			(CONFIG_SYS_FLASH_BASE + 0x3F00000)
-#define FMAN_IMAGE_OFFSET			(CONFIG_SYS_FLASH_BASE + 0x3F00000)
 
 /*
  * Environment
@@ -478,101 +488,127 @@ unsigned long get_board_ddr_clk(void);
  * Environment Configuration
  */
 #define CONFIG_ROOTPATH	 "/nfsroot"
-#define CONFIG_BOOTFILE	 "uImage"
-#define CONFIG_UBOOTPATH "u-boot.bin"	/* U-Boot image on TFTP server */
+#define CONFIG_BOOTFILE	 "/68ppc2/uImage"
+#define CONFIG_RCWPATH "/68ppc2/rcw.bin"	/* rcw image on TFTP server */
+#define CONFIG_UBOOTPATH "/68ppc2/u-boot.bin"	/* U-Boot image on TFTP server */
+#define CONFIG_FMANPATH "/68ppc2/fman.bin"	/* fman ucode image on TFTP server */
+#define CONFIG_DTBPATH "/68ppc2/68ppc2.dtb"	/* dtb image on TFTP server */
+#define CONFIG_KERNELPATH "/68ppc2/uImage"	/* kernel image on TFTP server */
+#define CONFIG_ROOTFSPATH "/68ppc2/rootfs.ext2.gz"	/* ramdisk image on TFTP server */
+
 
 /* default location for tftp and bootm */
-#define CONFIG_LOADADDR		1000000
+#define CONFIG_LOADADDR				1000000
+#define CONFIG_DTB_LOADADDR			1800000
+#define CONFIG_ROOTFS_LOADADDR		2000000
+
+
 #define CONFIG_BAUDRATE		115200
+#define CONFIG_SERVERIP		10.111.0.220
 #define __USB_PHY_TYPE		utmi
 
+
 #define	CONFIG_EXTRA_ENV_SETTINGS				\
-	"initrd_high=0xffffffff\0"				\
 	"hwconfig=fsl_ddr:"					\
 	"ctlr_intlv=" __stringify(CTRL_INTLV_PREFERED) ","	\
 	"bank_intlv=auto;"					\
 	"usb1:dr_mode=host,phy_type=" __stringify(__USB_PHY_TYPE) "\0"\
 	"netdev=eth0\0"						\
+	"consoledev=ttyS0\0"					\
+	"eth2addr=00:45:21:52:56:00\0"			\
+	"bdev=sda3\0" \
+	"rcw=" __stringify(CONFIG_RCWPATH) "\0"		\
+	"rcwaddr=" __stringify(RCW_IMAGE_OFFSET) "\0"	\
+	"rcwsize=" __stringify(RCW_IMAGE_SIZE) "\0"	\
 	"uboot=" __stringify(CONFIG_UBOOTPATH) "\0"		\
 	"ubootaddr=" __stringify(CONFIG_SYS_TEXT_BASE) "\0"	\
-	"tftpflash=tftpboot $loadaddr $uboot && "		\
-	"protect off $ubootaddr +$filesize && "			\
-	"erase $ubootaddr +$filesize && "			\
-	"cp.b $loadaddr $ubootaddr $filesize && "		\
-	"protect on $ubootaddr +$filesize && "			\
-	"cmp.b $loadaddr $ubootaddr $filesize\0"		\
-	"consoledev=ttyS0\0"					\
-	"ramdiskaddr=2000000\0"					\
-	"ramdiskfile=t2080rdb/ramdisk.uboot\0"			\
-	"fdtaddr=1e00000\0"					\
-	"fdtfile=t2080rdb/t2080rdb.dtb\0"			\
-	"bdev=sda3\0"
+	"ubootsize=" __stringify(UBOOT_IMAGE_SIZE) "\0"	\
+	"envaddr=" __stringify(UBOOT_IMAGE_ENV_OFFSET) "\0"	\
+	"envsize=" __stringify(UBOOT_IMAGE_ENV_SIZE) "\0"	\
+	"fman=" __stringify(CONFIG_FMANPATH) "\0"		\
+	"fmanaddr=" __stringify(FMAN_UCODE_IMAGE_OFFSET) "\0"	\
+	"fmansize=" __stringify(FMAN_UCODE_IMAGE_SIZE) "\0"	\
+	"dtb=" __stringify(CONFIG_DTBPATH) "\0"		\
+	"dtbaddr=" __stringify(DTB_IMAGE_OFFSET) "\0"	\
+	"dtbloadaddr=" __stringify(CONFIG_DTB_LOADADDR) "\0"	\
+	"dtbsize=" __stringify(DTB_IMAGE_SIZE) "\0"	\
+	"kernel=" __stringify(CONFIG_KERNELPATH) "\0"		\
+	"kerneladdr=" __stringify(KERNEL_IMAGE_OFFSET) "\0"	\
+	"kernelloadaddr=" __stringify(CONFIG_LOADADDR) "\0"	\
+	"kernelsize=" __stringify(KERNEL_IMAGE_SIZE) "\0"	\
+	"rootfs=" __stringify(CONFIG_ROOTFSPATH) "\0"		\
+	"rootfsaddr=" __stringify(ROOTFS_IMAGE_OFFSET) "\0"	\
+	"rootfsloadaddr=" __stringify(CONFIG_ROOTFS_LOADADDR) "\0"	\
+	"rootfssize=" __stringify(ROOTFS_IMAGE_SIZE) "\0"	\
+	"eraseenv=" \
+		"protect off $envaddr +$envsize;"		\
+		"erase $envaddr +$envsize;"		\
+		"protect on $envaddr +$envsize;\0"		\
+	"flashrcw=" \
+		"tftpboot $loadaddr $rcw;"	\
+		"protect off $rcwaddr +$rcwsize;"		\
+		"erase $rcwaddr +$rcwsize;"		\
+		"cp.b $loadaddr $rcwaddr $filesize;"		\
+		"protect on $rcwaddr +$rcwsize;"		\
+		"cmp.b $loadaddr $rcwaddr $filesize;\0"		\
+	"flashfman=" \
+		"tftpboot $loadaddr $fman;"	\
+		"protect off $fmanaddr +$fmansize;"		\
+		"erase $fmanaddr +$fmansize;"		\
+		"cp.b $loadaddr $fmanaddr $filesize;"		\
+		"protect on $fmanaddr +$fmansize;"		\
+		"cmp.b $loadaddr $fmanaddr $filesize;\0"		\
+	"flashuboot="\
+		"tftpboot $loadaddr $uboot;"	\
+		"protect off $ubootaddr +$ubootsize;"		\
+		"erase $ubootaddr +$ubootsize;"		\
+		"cp.b $loadaddr $ubootaddr $filesize;"		\
+		"protect on $ubootaddr +$ubootsize;"		\
+		"cmp.b $loadaddr $ubootaddr $filesize;"		\
+		"run eraseenv; \0 " \
+	"flashdtb="\
+		"tftpboot $loadaddr $dtb;"	\
+		"protect off $dtbaddr +$dtbsize;"		\
+		"erase $dtbaddr +$dtbsize;"		\
+		"cp.b $loadaddr $dtbaddr $filesize;"		\
+		"protect on $dtbaddr +$dtbsize;"		\
+		"cmp.b $loadaddr $dtbaddr $filesize;\0"		\
+	"flashkernel="\
+		"tftpboot $loadaddr $kernel;"	\
+		"protect off $kerneladdr +$kernelsize;"		\
+		"erase $kerneladdr +$kernelsize;"		\
+		"cp.b $loadaddr $kerneladdr $filesize;"		\
+		"protect on $kerneladdr +$kernelsize;"		\
+		"cmp.b $loadaddr $kerneladdr $filesize;\0"		\
+	"flashrootfs="\
+		"tftpboot $loadaddr $rootfs;"	\
+		"protect off $rootfsaddr +$rootfssize;"		\
+		"erase $rootfsaddr +$rootfssize;"		\
+		"cp.b $loadaddr $rootfsaddr $filesize;"		\
+		"protect on $rootfsaddr +$rootfssize;"		\
+		"cmp.b $loadaddr $rootfsaddr $filesize\0"		\
+	"norboot=echo NOR BOOT;" \
+			"setenv bootargs root=/dev/ram rw "		\
+			"console=$consoledev,$baudrate $othbootargs;"	\
+			"setenv verify no;"	\
+			"bootm $kerneladdr $rootfsaddr $dtbaddr;\0"	\
+	"netboot=echo NET BOOT;" \
+		"tftp $loadaddr $kernel;"		\
+		"tftp $rootfsloadaddr $rootfs;"			\
+		"tftp $dtbloadaddr $dtb;"			\
+		"setenv bootargs root=/dev/ram rw "		\
+		"console=$consoledev,$baudrate $othbootargs;"	\
+		"setenv verify no;"	\
+		"bootm $loadaddr $rootfsloadaddr $dtbloadaddr;\0" \
+	"default_bootcmd=run norboot\0"
 
-/*
- * For emulation this causes u-boot to jump to the start of the
- * proof point app code automatically
- */
-#define CONFIG_PROOF_POINTS				\
-	"setenv bootargs root=/dev/$bdev rw "		\
-	"console=$consoledev,$baudrate $othbootargs;"	\
-	"cpu 1 release 0x29000000 - - -;"		\
-	"cpu 2 release 0x29000000 - - -;"		\
-	"cpu 3 release 0x29000000 - - -;"		\
-	"cpu 4 release 0x29000000 - - -;"		\
-	"cpu 5 release 0x29000000 - - -;"		\
-	"cpu 6 release 0x29000000 - - -;"		\
-	"cpu 7 release 0x29000000 - - -;"		\
-	"go 0x29000000"
+#define CONFIG_PROC_RESET_CONFIG				\
+	"cpld procreset 1;" \
+	"cpld tempalarm 0;"
 
-#define CONFIG_HVBOOT				\
-	"setenv bootargs config-addr=0x60000000; "	\
-	"bootm 0x01000000 - 0x00f00000"
-
-#define CONFIG_ALU				\
-	"setenv bootargs root=/dev/$bdev rw "		\
-	"console=$consoledev,$baudrate $othbootargs;"	\
-	"cpu 1 release 0x01000000 - - -;"		\
-	"cpu 2 release 0x01000000 - - -;"		\
-	"cpu 3 release 0x01000000 - - -;"		\
-	"cpu 4 release 0x01000000 - - -;"		\
-	"cpu 5 release 0x01000000 - - -;"		\
-	"cpu 6 release 0x01000000 - - -;"		\
-	"cpu 7 release 0x01000000 - - -;"		\
-	"go 0x01000000"
-
-#define CONFIG_LINUX				\
-	"setenv bootargs root=/dev/ram rw "		\
-	"console=$consoledev,$baudrate $othbootargs;"	\
-	"setenv ramdiskaddr 0x02000000;"		\
-	"setenv fdtaddr 0x00c00000;"			\
-	"setenv loadaddr 0x1000000;"			\
-	"bootm $loadaddr $ramdiskaddr $fdtaddr"
-
-#define CONFIG_HDBOOT					\
-	"setenv bootargs root=/dev/$bdev rw "		\
-	"console=$consoledev,$baudrate $othbootargs;"	\
-	"tftp $loadaddr $bootfile;"			\
-	"tftp $fdtaddr $fdtfile;"			\
-	"bootm $loadaddr - $fdtaddr"
-
-#define CONFIG_NFSBOOTCOMMAND			\
-	"setenv bootargs root=/dev/nfs rw "	\
-	"nfsroot=$serverip:$rootpath "		\
-	"ip=$ipaddr:$serverip:$gatewayip:$netmask:$hostname:$netdev:off " \
-	"console=$consoledev,$baudrate $othbootargs;"	\
-	"tftp $loadaddr $bootfile;"		\
-	"tftp $fdtaddr $fdtfile;"		\
-	"bootm $loadaddr - $fdtaddr"
-
-#define CONFIG_RAMBOOTCOMMAND				\
-	"setenv bootargs root=/dev/ram rw "		\
-	"console=$consoledev,$baudrate $othbootargs;"	\
-	"tftp $ramdiskaddr $ramdiskfile;"		\
-	"tftp $loadaddr $bootfile;"			\
-	"tftp $fdtaddr $fdtfile;"			\
-	"bootm $loadaddr $ramdiskaddr $fdtaddr"
-
-#define CONFIG_BOOTCOMMAND		CONFIG_LINUX
+#define CONFIG_BOOTCOMMAND	\
+	CONFIG_PROC_RESET_CONFIG \
+	"run default_bootcmd"
 
 #include <asm/fsl_secure_boot.h>
 

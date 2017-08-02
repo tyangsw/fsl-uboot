@@ -21,6 +21,30 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+static void _wait_fgpa_ready()
+{
+	ulong time = get_timer(0);
+	u16 ready = 0;
+	
+	do{
+		ready = cpld_read(CPLD_FPGA_RDY);
+		//timeout
+		if(get_timer(time) > (10 * 1000))
+			break;
+	}while(ready != 0x0db1);
+
+	if(ready == 0x0db1)
+	{
+		printf("FPGA is ready: 0x%02X\n", ready);
+	}
+	else
+	{
+		printf("FPGA not ready: 0x%02X\n", ready);
+	}
+	
+	return;
+}
+
 int checkboard(void)
 {
 	static const char *freq[3] = {"100.00MHZ", "125.00MHz", "156.25MHZ"};
@@ -28,6 +52,9 @@ int checkboard(void)
 	printf("Board: 68PPC2, Version:%02d.%02d.%02d\n", CONFIG_68PPC2_MAJOR,CONFIG_68PPC2_MINOR,CONFIG_68PPC2_BUILD);
 	printf("FLASH Bank: 0x%02x\n", cpld_read(CPLD_BANK_SEL));
 	printf("CPLD ver: 0x%02x\n", cpld_read(CPLD_FW_REV));
+
+	/*wait for Zynq FPGA Ready*/
+	_wait_fgpa_ready();
 	
 	puts("SERDES Reference Clocks:\n");
 	printf("SD1_CLK1=%s, SD1_CLK2=%s\n", freq[0], freq[0]);
