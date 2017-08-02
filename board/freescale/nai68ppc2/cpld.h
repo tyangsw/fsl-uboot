@@ -25,17 +25,17 @@
 #define CPLD_FW_REV					0x00000006
 #define CPLD_TTL_RW					0x00000008
 #define CPLD_TTL_LPBK				0x0000000A
-#define CPLD_RD_TTL_DATA			0x0000000C
-#define CPLD_WR_TTL_DATA			0x0000000E
-#define CPLD_SPARE2					0x00000010
+#define CPLD_TTL_DATA				0x0000000C
+#define CPLD_PROC_STATUS			0x0000000E /*write 1 to enable proc reset function, reset default value is 0*/
+#define CPLD_FPGA_RDY				0x00000010 /*read only when reg read 0x0DB1 then fpga is ready */
 #define CPLD_SPARE3					0x00000012
 #define CPLD_WR_TTL_INT_EN			0x00000014
 #define CPLD_WR_TTL_INT_DIR			0x00000016
 #define CPLD_INT_STAT				0x00000018
-#define CPLD_WR_TEMP_ALM_OVRD		0x0000001A
+#define CPLD_WR_TEMP_ALM_OVRD		0x0000001A /*write 0 to enable temp shutdown. reset default value is 1*/
 #define CPLD_PWR_DWN_CMD			0x0000001C
 #define CPLD_TEMP_ALM_INT_STAT		0x0000001E
-#define CPLD_WR_TEMP_ALM_INT_EN		0x00000020
+#define CPLD_WR_TEMP_ALM_INT_EN		0x00000020 
 
 #define CPLD_FLASH_BANK_0		0x00
 #define CPLD_FLASH_BANK_1		0x01
