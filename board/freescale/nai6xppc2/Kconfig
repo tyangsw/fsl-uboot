@@ -1,12 +1,12 @@
-if TARGET_NAI68PPC2
+if TARGET_NAI6XPPC2
 
 config SYS_BOARD
-	default "nai68ppc2"
+	default "nai6xppc2"
 
 config SYS_VENDOR
 	default "freescale"
 
 config SYS_CONFIG_NAME
-	default "NAI68PPC2"
+	default "NAI6xPPC2"
 
 endif

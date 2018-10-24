@@ -44,6 +44,98 @@ static void __cpld_write(unsigned int reg, u16 value) {
 
 	out_be16(p + reg, value);
 }
+
+static void pci_dma_tst(void)
+{
+    u32 val = 0;
+    u32 count = 10;
+
+    //cpld_write(CPLD_TTL_RW, 0x01);
+    //cpld_write(CPLD_TTL_DATA, 0x01);
+    //cpld_write(CPLD_TTL_DATA, 0x0);
+    //cpld_write(CPLD_TTL_RW, 0x0);
+#if 1
+     do{
+		out_be32((void *)0x1800000,0);
+		out_be32((void *)0x1800004,0);
+		out_be32((void *)0x1800008,0);
+		out_be32((void *)0x180000C,0);
+		
+		cpld_write(CPLD_TTL_DATA, 0x01);
+		out_le32((void *)0xA1003F6C,0x1);
+		out_le32((void *)0xA1403F6C,0x1);
+		out_le32((void *)0xA1803F6C,0x1);
+		
+		while(val != 1)
+		{
+		  if((in_be32((void *)0x1800000) == 0x0300dec0) && 
+			 (in_be32((void *)0x1800004) == 0x0400dec0) &&
+			 (in_be32((void *)0x1800008) == 0x0500dec0))
+		  {
+		  
+			val = 1;
+		  }
+		  
+		}
+		//printf("0 0x%08x\n",in_be32((void *)0x1800000));
+		//printf("1 0x%08x\n",in_be32((void *)0x1800004));
+		//printf("2 0x%08x\n",in_be32((void *)0x1800008));
+		val = 0;
+		cpld_write(CPLD_TTL_DATA, 0x0);
+		
+		out_be32((void *)0x180000C,0);
+		cpld_write(CPLD_TTL_DATA, 0x01);
+		out_le32((void *)0xA1C03F6C,0x1);
+		while(val != 1)
+		{
+		  if(in_be32((void *)0x180000C) == 0x0600dec0)
+		  {
+			val = 1;
+		  }
+		}
+		//printf("3 0x%08x\n",in_be32((void *)0x180000C));
+		val = 0;
+		cpld_write(CPLD_TTL_DATA, 0x0);
+    }while(count--);
+#endif
+    return;
+}
+
+static void pci_dma_tst2(void)
+{
+	u32 val = 0;
+	u32 count = 10;
+
+	do {
+		out_be32((void *)0x1800000,0);
+		out_be32((void *)0x1800004,0);
+		out_be32((void *)0x1800008,0);
+		out_be32((void *)0x180000C,0);
+		
+		cpld_write(CPLD_TTL_DATA, 0x01);
+		out_le32((void *)0xA1003F6C,0x1);
+		out_le32((void *)0xA1403F6C,0x1);
+		out_le32((void *)0xA1803F6C,0x1);
+		out_le32((void *)0xA1C03F6C,0x1);
+		
+		while(val != 1)
+		{
+		  if((in_be32((void *)0x1800000) == 0x0300dec0) && 
+			 (in_be32((void *)0x1800004) == 0x0400dec0) &&
+			 (in_be32((void *)0x1800008) == 0x0500dec0) && 
+			 (in_be32((void *)0x180000C) == 0x0600dec0))
+		  {
+			val = 1;
+		  }
+		  
+		}
+		val = 0;
+		cpld_write(CPLD_TTL_DATA, 0x0);
+	}while(count--);
+
+	return;
+}
+
 void cpld_write(unsigned int reg, u16 value)
 	__attribute__((weak, alias("__cpld_write")));
 
@@ -154,6 +246,18 @@ int cpld_cmd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 	} else if (strcmp(argv[1], "getbank") == 0) {
 		u16 val = cpld_read(CPLD_BANK_SEL);
 		printf("Flash bank 0x%02X\n", val);
+	} else if (strcmp(argv[1], "dma") == 0) {
+		u16 val = simple_strtoul(argv[2], NULL, 16);
+		switch (val){
+			case 1:
+				pci_dma_tst();
+			case 2:
+				pci_dma_tst2();
+				break;
+			default:
+				rc = cmd_usage(cmdtp);
+				printf("Invalid dma test command\n");
+		}
 	} else
 		rc = cmd_usage(cmdtp);
 

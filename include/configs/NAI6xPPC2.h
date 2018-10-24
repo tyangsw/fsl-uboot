@@ -8,14 +8,14 @@
  * NAI T2080 based PPC2 board configuration file
  */
 
-#ifndef __NAI68PPC2_H
-#define __NAI68PPC2_H
+#ifndef __NAI6XPPC2_H
+#define __NAI6XPPC2_H
 
 #define CONFIG_DISPLAY_BOARDINFO
-#define CONFIG_NAI68PPC2
-#define CONFIG_68PPC2_MAJOR 0
-#define CONFIG_68PPC2_MINOR 1
-#define CONFIG_68PPC2_BUILD 2
+#define CONFIG_NAI6XPPC2
+#define CONFIG_6XPPC2_MAJOR 0
+#define CONFIG_6XPPC2_MINOR 1
+#define CONFIG_6XPPC2_BUILD 3
 #define CONFIG_USB_EHCI
 #define CONFIG_FSL_SATA_V2
 
@@ -85,6 +85,7 @@ unsigned long get_board_ddr_clk(void);
 
 #define CONFIG_SYS_CLK_FREQ	100000000
 #define CONFIG_DDR_CLK_FREQ	133333333
+
 
 /*
  * Config the L3 Cache as L3 SRAM
@@ -488,13 +489,13 @@ unsigned long get_board_ddr_clk(void);
  * Environment Configuration
  */
 #define CONFIG_ROOTPATH	 "/nfsroot"
-#define CONFIG_BOOTFILE	 "/68ppc2/uImage"
-#define CONFIG_RCWPATH "/68ppc2/rcw.bin"	/* rcw image on TFTP server */
-#define CONFIG_UBOOTPATH "/68ppc2/u-boot.bin"	/* U-Boot image on TFTP server */
-#define CONFIG_FMANPATH "/68ppc2/fman.bin"	/* fman ucode image on TFTP server */
-#define CONFIG_DTBPATH "/68ppc2/68ppc2.dtb"	/* dtb image on TFTP server */
-#define CONFIG_KERNELPATH "/68ppc2/uImage"	/* kernel image on TFTP server */
-#define CONFIG_ROOTFSPATH "/68ppc2/rootfs.ext2.gz"	/* ramdisk image on TFTP server */
+#define CONFIG_BOOTFILE	 "/6xppc2/uImage"
+#define CONFIG_RCWPATH "/6xppc2/rcw.bin"	/* rcw image on TFTP server */
+#define CONFIG_UBOOTPATH "/6xppc2/u-boot.bin"	/* U-Boot image on TFTP server */
+#define CONFIG_FMANPATH "/6xppc2/fman.bin"	/* fman ucode image on TFTP server */
+#define CONFIG_DTBPATH "/6xppc2/68ppc2.dtb"	/* dtb image on TFTP server */
+#define CONFIG_KERNELPATH "/6xppc2/uImage"	/* kernel image on TFTP server */
+#define CONFIG_ROOTFSPATH "/6xppc2/rootfs.ext2.gz"	/* ramdisk image on TFTP server */
 
 
 /* default location for tftp and bootm */
@@ -612,4 +613,4 @@ unsigned long get_board_ddr_clk(void);
 
 #include <asm/fsl_secure_boot.h>
 
-#endif	/* __NAI68PPC2_H */
+#endif	/* __NAI6XPPC2_H */
