@@ -28,7 +28,7 @@
 #define CPLD_TTL_DATA				0x0000000C
 #define CPLD_PROC_STATUS			0x0000000E /*write 1 to enable proc reset function, reset default value is 0*/
 #define CPLD_FPGA_RDY				0x00000010 /*read only when reg read 0x0DB1 then fpga is ready */
-#define CPLD_SPARE3					0x00000012
+#define CPLD_PCIE_SW_RESET			0x00000012 /*write 1 to reset the PCIe switch*/
 #define CPLD_WR_TTL_INT_EN			0x00000014
 #define CPLD_WR_TTL_INT_DIR			0x00000016
 #define CPLD_INT_STAT				0x00000018

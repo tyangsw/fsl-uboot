@@ -9,7 +9,7 @@ obj-$(CONFIG_NAI6XPPC2) += eth.o
 obj-$(CONFIG_NAI6XPPC2) += cpld.o
 obj-$(CONFIG_PCI)       += pci.o
 obj-y   += cmd_pci_dma.o
-
+obj-y   += cmd_idt_pcie_sw.o
 obj-y   += ddr.o
 obj-y   += law.o
 obj-y   += tlb.o

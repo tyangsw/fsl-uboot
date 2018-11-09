@@ -15,7 +15,7 @@
 #define CONFIG_NAI6XPPC2
 #define CONFIG_6XPPC2_MAJOR 0
 #define CONFIG_6XPPC2_MINOR 1
-#define CONFIG_6XPPC2_BUILD 3
+#define CONFIG_6XPPC2_BUILD 4
 #define CONFIG_USB_EHCI
 #define CONFIG_FSL_SATA_V2
 
@@ -489,13 +489,13 @@ unsigned long get_board_ddr_clk(void);
  * Environment Configuration
  */
 #define CONFIG_ROOTPATH	 "/nfsroot"
-#define CONFIG_BOOTFILE	 "/6xppc2/uImage"
-#define CONFIG_RCWPATH "/6xppc2/rcw.bin"	/* rcw image on TFTP server */
-#define CONFIG_UBOOTPATH "/6xppc2/u-boot.bin"	/* U-Boot image on TFTP server */
-#define CONFIG_FMANPATH "/6xppc2/fman.bin"	/* fman ucode image on TFTP server */
-#define CONFIG_DTBPATH "/6xppc2/68ppc2.dtb"	/* dtb image on TFTP server */
-#define CONFIG_KERNELPATH "/6xppc2/uImage"	/* kernel image on TFTP server */
-#define CONFIG_ROOTFSPATH "/6xppc2/rootfs.ext2.gz"	/* ramdisk image on TFTP server */
+#define CONFIG_BOOTFILE	 "6xppc2/uImage"
+#define CONFIG_RCWPATH "6xppc2/rcw.bin"	/* rcw image on TFTP server */
+#define CONFIG_UBOOTPATH "6xppc2/u-boot.bin"	/* U-Boot image on TFTP server */
+#define CONFIG_FMANPATH "6xppc2/fman.bin"	/* fman ucode image on TFTP server */
+#define CONFIG_DTBPATH "6xppc2/68ppc2.dtb"	/* dtb image on TFTP server */
+#define CONFIG_KERNELPATH "6xppc2/uImage"	/* kernel image on TFTP server */
+#define CONFIG_ROOTFSPATH "6xppc2/rootfs.ext2.gz"	/* ramdisk image on TFTP server */
 
 
 /* default location for tftp and bootm */
@@ -505,7 +505,7 @@ unsigned long get_board_ddr_clk(void);
 
 
 #define CONFIG_BAUDRATE		115200
-#define CONFIG_SERVERIP		10.111.0.220
+#define CONFIG_SERVERIP		10.111.1.21
 #define __USB_PHY_TYPE		utmi
 
 
